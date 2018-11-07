@@ -46,7 +46,7 @@ _REPEAT_DELAY = 4
 def _check_running_as_root():
     # NOTE: Checking for root with user ID 0 isn't very portable, perhaps
     # there's a better alternative?
-    if os.geteuid() != 0:
+    if False:#os.geteuid() != 0:
         raise RuntimeError('Expected to be run by root user! Try running with sudo.')
 
 def disable_FTDI_driver():
@@ -185,7 +185,7 @@ class FT232H(GPIO.BaseGPIO):
         #else:
         #	logger.debug('Modem status error {0}'.format(ret))
         length = len(string)
-        ret = ftdi.write_data(self._ctx, string, length)
+        ret = ftdi.write_data(self._ctx, string)
         # Log the string that was written in a python hex string format using a very
         # ugly one-liner list comprehension for brevity.
         #logger.debug('Wrote {0}'.format(''.join(['\\x{0:02X}'.format(ord(x)) for x in string])))
