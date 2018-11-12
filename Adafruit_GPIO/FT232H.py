@@ -26,6 +26,7 @@ import os
 import subprocess
 import sys
 import time
+import inspect
 
 import ftdi1 as ftdi
 
@@ -185,7 +186,13 @@ class FT232H(GPIO.BaseGPIO):
         #else:
         #	logger.debug('Modem status error {0}'.format(ret))
         length = len(string)
-        ret = ftdi.write_data(self._ctx, string)
+        (ftdi_args, ftdi_varargs, ftdi_keywords, ftdi_defaults) = inspect.getargspec(ftdi.write_data)
+        if len(ftdi_args) > 2:
+            #Old version of python-ftdi1 (Ubuntu 16.04)
+            ret = ftdi.write_data(self._ctx, string, length)
+        else:
+            #New version of python-ftdi1 (Ubuntu 18.04)
+            ret = ftdi.write_data(self._ctx, string)
         # Log the string that was written in a python hex string format using a very
         # ugly one-liner list comprehension for brevity.
         #logger.debug('Wrote {0}'.format(''.join(['\\x{0:02X}'.format(ord(x)) for x in string])))
